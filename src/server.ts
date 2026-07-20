@@ -54,6 +54,8 @@ app.get("/modules", async (request: Request, response: Response) => {
 app.get(
   "/courses/:id/modules",
   async (request: Request, response: Response) => {
+    const { id } = request.params; // 1. Captura o id dos parâmetros da rota
+
     const courses = await knex("courses")
       .select(
         "courses.id AS course_id",
@@ -61,7 +63,8 @@ app.get(
         "course_modules.name AS module",
         "courses.name AS course",
       )
-      .join("course_modules", "courses.id", "course_modules.course_id");
+      .join("course_modules", "courses.id", "course_modules.course_id")
+      .where("courses.id", id); // 2. Filtra pelo ID específico do curso
 
     return response.json(courses);
   },
